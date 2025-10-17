@@ -120,26 +120,24 @@ function handleUser(text){
 
 function confirmReserva(){
   const r = state.reserva;
-  bubble(`¡Listo! 🎉 Tu reserva para <b>${r.personas}</b> el <b>${r.fecha}</b> a las <b>${r.hora}</b> a nombre de <b>${r.nombre}</b> ha quedado registrada (DEMO).`);
-  bubble('¿Quieres recibir el resumen por email o WhatsApp? (DEMO)');
+  bubble(`¡Listo! 🎉 Tu reserva para <b>${r.personas}</b> el <b>${r.fecha}</b> a las <b>${r.hora}</b> a nombre de <b>${r.nombre}</b> ha quedado registrada.`);
+  bubble('Te enviamos un resumen por email 📧 (DEMO)');
   state.step = 'greeting';
 
-  // --- Envío por EmailJS (opcional) ---
-  // import('https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js').then(() => {
-  //   emailjs.init('YOUR_PUBLIC_KEY');
-  //   emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
-  //     nombre: r.nombre,
-  //     fecha: r.fecha,
-  //     hora: r.hora,
-  //     personas: r.personas,
-  //   });
-  // });
+  // --- Envío real por EmailJS ---
+  emailjs.send("service_2pm1fjw", "template_fghra0v", {
+    nombre:   r.nombre,
+    fecha:    r.fecha,
+    hora:     r.hora,
+    personas: r.personas,
+    origen:   "Ruflo Bots · Demo Web"
+  })
+  .then(() => {
+    bubble("✅ Resumen enviado a tu correo (DEMO).");
+  })
+  .catch((err) => {
+    console.error(err);
+    bubble("⚠️ No se pudo enviar el email ahora. Inténtalo más tarde.");
+  });
 }
 
-setTimeout(greet, 400);
-form.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const val = input.value;
-  input.value = '';
-  handleUser(val);
-});
