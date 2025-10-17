@@ -4,10 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Ruflo Bots · Demo WhatsApp</title>
-    <link
-      rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%2325d366'/%3E%3Ctext x='50' y='60' text-anchor='middle' font-size='44' font-family='Arial' fill='%230b141a'%3ER%3C/text%3E%3C/svg%3E"
-    />
     <link rel="stylesheet" href="./styles.css" />
     <meta
       name="description"
@@ -16,28 +12,44 @@
   </head>
   <body>
     <div class="wrap">
-      <div class="phone">
+      <div
+        class="phone"
+        role="region"
+        aria-label="Demo de chat estilo WhatsApp"
+      >
         <div class="header">
-          <div class="avatar">RB</div>
+          <div class="avatar" aria-hidden="true">RB</div>
           <div class="title">
             <h1>Ruflo Bots · Reservas</h1>
             <p>Demo local (sin API) — Español</p>
           </div>
         </div>
 
-        <div id="chat" class="chat blur"></div>
+        <div id="chat" class="chat blur" aria-live="polite"></div>
 
         <form id="form" class="input" autocomplete="off">
-          <input id="text" type="text" placeholder="Escribe un mensaje…" />
-          <button id="send" type="submit">Enviar</button>
+          <input
+            id="text"
+            type="text"
+            placeholder="Escribe un mensaje…"
+            aria-label="Mensaje"
+          />
+          <button id="send" type="submit" aria-label="Enviar">Enviar</button>
         </form>
       </div>
     </div>
     <div class="beta">DEMO</div>
 
-    <script type="module" src="./app.js"></script>
+    <!-- EmailJS (opcional). Si no lo usas aún, puedes dejarlo tal cual -->
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-    <script>(function(){ emailjs.init("rW6dAcgWnTBKphALV"); })();</script>
+    <script>
+      // Sustituye TU_PUBLIC_KEY cuando lo tengas. Si no, no pasa nada.
+      try {
+        emailjs.init("rW6dAcgWnTBKphALV");
+      } catch (e) {}
+    </script>
 
+    <!-- Tu lógica -->
+    <script type="module" src="./app.js"></script>
   </body>
 </html>
