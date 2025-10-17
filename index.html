@@ -1,87 +1,38 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ruflo Bots · Demo WhatsApp</title>
-  <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: #101418; color: #eaecee; }
-    .wrap { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
-    .phone { width: 360px; max-width: 92vw; height: 640px; background: #0b141a; border-radius: 30px; border: 1px solid #1e2a34; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.45); display: grid; grid-template-rows: 64px 1fr 68px; }
-    .header { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: #1f2c34; border-bottom: 1px solid #23333c; }
-    .avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#25d366,#128c7e); display: grid; place-items: center; font-weight: 700; color: #0b141a; }
-    .title h1 { margin: 0; font-size: 15px; font-weight: 700; }
-    .title p { margin: 0; font-size: 12px; color: #aab8c2; }
-    .chat { padding: 16px; overflow-y: auto; background: url('https://images.unsplash.com/photo-1614851099511-773084f6911e?q=80&w=1200&auto=format&fit=crop') center/cover fixed; }
-    .blur { backdrop-filter: blur(2px); }
-    .msg { max-width: 80%; padding: 10px 12px; margin: 6px 0; border-radius: 12px; line-height: 1.25; font-size: 14px; position: relative; }
-    .msg.bot { background: #1f2c34; color: #e6f1f5; border: 1px solid #23333c; }
-    .msg.user { background: #005c4b; color: #d6fff2; margin-left: auto; border: 1px solid #0a6f5a; }
-    .time { display: block; opacity: .6; font-size: 11px; margin-top: 6px; }
-    .input { display: flex; align-items: center; gap: 8px; padding: 10px; background: #1f2c34; border-top: 1px solid #23333c; }
-    .input input { flex: 1; background: #0b141a; color: #eaecee; border: 1px solid #23333c; border-radius: 999px; padding: 12px 14px; outline: none; }
-    .input button { background: #25d366; color: #0b141a; border: none; border-radius: 999px; padding: 10px 14px; font-weight: 700; cursor: pointer; }
-    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
-    .chip { background: #23333c; border: 1px solid #2d3f49; color: #d7e5eb; padding: 6px 10px; border-radius: 999px; font-size: 12px; cursor: pointer; }
-    .beta { position: fixed; top: 10px; right: 10px; background: #25d366; color: #0b141a; padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ruflo Bots · Demo WhatsApp</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%2325d366'/%3E%3Ctext x='50' y='60' text-anchor='middle' font-size='44' font-family='Arial' fill='%230b141a'%3ER%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://images.unsplash.com"/>
+<link rel="stylesheet" href="./styles.css" />
+<meta name="description" content="Demo de asistente estilo WhatsApp para reservas — Ruflo Bots" />
 </head>
 <body>
-  <div class="wrap">
-    <div class="phone">
-      <div class="header">
-        <div class="avatar">RB</div>
-        <div class="title">
-          <h1>Ruflo Bots · Reservas</h1>
-          <p>Demo local (sin API) — Español</p>
-        </div>
-      </div>
-      <div id="chat" class="chat blur"></div>
-      <form id="form" class="input" autocomplete="off">
-        <input id="text" type="text" placeholder="Escribe un mensaje…" />
-        <button id="send" type="submit">Enviar</button>
-      </form>
-    </div>
-  </div>
-  <div class="beta">DEMO</div>
-  <script>
-    const state = { step: 'greeting', reserva: { nombre: '', fecha: '', hora: '', personas: '' } };
-    const chat = document.getElementById('chat');
-    const form = document.getElementById('form');
-    const input = document.getElementById('text');
-    const time = () => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    function scrollBottom(){ chat.scrollTop = chat.scrollHeight; }
-    function bubble(text, who = 'bot'){
-      const div = document.createElement('div');
-      div.className = `msg ${who}`;
-      div.innerHTML = `${text}<span class='time'>${time()}</span>`;
-      chat.appendChild(div);
-      scrollBottom();
-    }
-    function chips(options){
-      const wrap = document.createElement('div');
-      wrap.className = 'chips';
-      options.forEach(opt => {
-        const c = document.createElement('button');
-        c.type = 'button';
-        c.className = 'chip';
-        c.textContent = opt.label;
-        c.addEventListener('click', () => opt.onClick());
-        wrap.appendChild(c);
-      });
-      chat.appendChild(wrap);
-      scrollBottom();
-    }
-    const isFecha = (s) => /^(\d{2})\/(\d{2})$/.test(s.trim());
-    const isHora  = (s) => /^(\d{2}):(\d{2})$/.test(s.trim());
-    const isNum   = (s) => /^\d{1,2}$/.test(s.trim());
-    function greet(){ bubble('¡Hola! 👋 Soy el asistente de Restaurante Demo. ¿En qué te ayudo?'); chips([{ label: 'Reservar mesa', onClick(){ choose('reservar'); } }, { label: 'Ver menú', onClick(){ choose('menu'); } }, { label: 'Horario', onClick(){ choose('horario'); } }]); }
-    function choose(key){ bubble(key, 'user'); if(key === 'reservar'){ state.step = 'reserva_nombre'; bubble('Perfecto, ¿a nombre de quién hacemos la reserva?'); } else if(key === 'menu') { bubble('Hoy tenemos menú del día: 🍝 Pasta / 🐟 Merluza / 🥗 Ensalada. ¿Quieres reservar?'); chips([{ label: 'Sí, reservar', onClick(){ choose('reservar'); } }, { label: 'No, gracias', onClick(){ bubble('¡Genial! Si necesitas algo más, aquí estoy ✌️'); } }]); } else if(key === 'horario'){ bubble('Abrimos de 13:00 a 16:00 y de 20:00 a 23:30. ¿Te hago una reserva?'); chips([{ label: 'Reservar mesa', onClick(){ choose('reservar'); } }, { label: 'Otra consulta', onClick(){ bubble('Cuéntame 🙂'); } }]); } }
-    function handleUser(text){ const clean = text.trim(); if(!clean) return; bubble(clean, 'user'); switch(state.step){ case 'greeting': if(/reserv/i.test(clean)) return choose('reservar'); if(/men/u.test(clean)) return choose('menu'); if(/horar|abre/i.test(clean)) return choose('horario'); bubble('Puedo ayudarte con reservas, menú u horario 🙂'); break; case 'reserva_nombre': state.reserva.nombre = clean; state.step = 'reserva_fecha'; bubble('¡Encantado! 📆 Dime la fecha (dd/mm).'); break; case 'reserva_fecha': if(!isFecha(clean)) return bubble('Formato de fecha no válido. Usa dd/mm (ej. 25/12).'); state.reserva.fecha = clean; state.step = 'reserva_hora'; bubble('⏰ ¿A qué hora? (hh:mm)'); break; case 'reserva_hora': if(!isHora(clean)) return bubble('Formato de hora no válido. Usa hh:mm (ej. 21:00).'); state.reserva.hora = clean; state.step = 'reserva_personas'; bubble('👥 ¿Para cuántas personas? (número)'); break; case 'reserva_personas': if(!isNum(clean)) return bubble('Indica un número (ej. 2, 4, 6…).'); state.reserva.personas = clean; state.step = 'reserva_confirmar'; const r = state.reserva; bubble(`Resumen: ${r.nombre}, ${r.personas} personas, el ${r.fecha} a las ${r.hora}. ¿Confirmo?`); chips([{ label: 'Confirmar ✅', onClick(){ confirmReserva(); } }, { label: 'Cambiar hora', onClick(){ state.step='reserva_hora'; bubble('Dime la nueva hora (hh:mm)'); } }]); break; default: bubble('Te escucho 👂 ¿Reserva, menú u horario?'); } }
-    function confirmReserva(){ const r = state.reserva; bubble(`¡Listo! 🎉 Reserva para ${r.personas} el ${r.fecha} a las ${r.hora} a nombre de ${r.nombre}.`); bubble('¿Quieres recibir el resumen por email o WhatsApp? (DEMO)'); state.step = 'greeting'; }
-    setTimeout(greet, 400);
-    form.addEventListener('submit', (e) => { e.preventDefault(); const val = input.value; input.value = ''; handleUser(val); });
-  </script>
+<div class="wrap">
+<div class="phone" role="region" aria-label="Demo de chat estilo WhatsApp">
+<div class="header">
+<div class="avatar" aria-hidden="true">RB</div>
+<div class="title">
+<h1>Ruflo Bots · Reservas</h1>
+<p>Demo local (sin API) — Español</p>
+</div>
+</div>
+
+
+<div id="chat" class="chat blur" aria-live="polite"></div>
+
+
+<form id="form" class="input" autocomplete="off">
+<input id="text" type="text" placeholder="Escribe un mensaje…" aria-label="Mensaje" />
+<button id="send" type="submit" aria-label="Enviar">Enviar</button>
+</form>
+</div>
+</div>
+<div class="beta">DEMO</div>
+
+
+<script type="module" src="./app.js"></script>
 </body>
 </html>

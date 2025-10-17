@@ -1,0 +1,158 @@
+* {
+  box-sizing: border-box;
+}
+:root {
+  --bg: #101418;
+  --card: #0b141a;
+  --ink: #eaecee;
+  --line: #23333c;
+  --accent: #25d366;
+  --chip: #23333c;
+  --chip-line: #2d3f49;
+  --bot: #1f2c34;
+  --user: #005c4b;
+}
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+}
+.wrap {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+.phone {
+  width: 360px;
+  max-width: 92vw;
+  height: 640px;
+  background: var(--card);
+  border-radius: 30px;
+  border: 1px solid #1e2a34;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+  display: grid;
+  grid-template-rows: 64px 1fr 68px;
+}
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #1f2c34;
+  border-bottom: 1px solid var(--line);
+}
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #128c7e);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: var(--card);
+}
+.title h1 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+.title p {
+  margin: 0;
+  font-size: 12px;
+  color: #aab8c2;
+}
+.chat {
+  padding: 16px;
+  overflow-y: auto;
+  background: url("https://images.unsplash.com/photo-1614851099511-773084f6911e?q=80&w=1200&auto=format&fit=crop")
+    center/cover fixed;
+}
+.blur {
+  backdrop-filter: blur(2px);
+}
+.msg {
+  max-width: 80%;
+  padding: 10px 12px;
+  margin: 6px 0;
+  border-radius: 12px;
+  line-height: 1.25;
+  font-size: 14px;
+  position: relative;
+}
+.msg.bot {
+  background: #1f2c34;
+  color: #e6f1f5;
+  border: 1px solid var(--line);
+}
+.msg.user {
+  background: var(--user);
+  color: #d6fff2;
+  margin-left: auto;
+  border: 1px solid #0a6f5a;
+}
+.time {
+  display: block;
+  opacity: 0.6;
+  font-size: 11px;
+  margin-top: 6px;
+}
+.input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  background: #1f2c34;
+  border-top: 1px solid var(--line);
+}
+.input input {
+  flex: 1;
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 12px 14px;
+  outline: none;
+}
+.input button {
+  background: var(--accent);
+  color: var(--card);
+  border: none;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+.chip {
+  background: var(--chip);
+  border: 1px solid var(--chip-line);
+  color: #d7e5eb;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.beta {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: var(--accent);
+  color: var(--card);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+}
+@media (max-height: 700px) {
+  .phone {
+    height: 86vh;
+  }
+}
